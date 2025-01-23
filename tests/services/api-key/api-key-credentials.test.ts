@@ -3,6 +3,7 @@ import { Connection } from '../../../src/database/connection';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { AuthCredential } from '../../../src/models/auth-credential';
 import { AuthCredentialType } from '../../../src/models/auth-credential-type';
+import { AuthCredentialRepository } from '../../../src/database/repositories/auth-credential-repository';
 
 describe('ApiKeyCredentials', () => {
   let id: number;
@@ -11,7 +12,7 @@ describe('ApiKeyCredentials', () => {
   let clientId: string;
   let type: AuthCredentialType;
   let apiKey: string;
-  let connection: MockProxy<Connection>;
+  let authCredentialRepository: MockProxy<AuthCredentialRepository>;
   let sut: ApiKeyCredentials;
 
   beforeAll(() => {
@@ -21,20 +22,20 @@ describe('ApiKeyCredentials', () => {
 	clientId = 'any_client_id';
 	type = AuthCredentialType.API_KEY;
     apiKey = 'any_api_key';
-    connection = mock<Connection>();
-    connection.findByApiKey.mockResolvedValue(
+    authCredentialRepository = mock<AuthCredentialRepository>();
+    authCredentialRepository.findByApiKey.mockResolvedValue(
       new AuthCredential({ id, name, key, apiKey, clientId, type })
     );
-    sut = new ApiKeyCredentials(connection);
+    sut = new ApiKeyCredentials(authCredentialRepository);
   });
 
   it('should call connection with correct values', async () => {
     await sut.validate({ apiKey });
-    expect(connection.findByApiKey).toHaveBeenCalledWith({ apiKey });
+    expect(authCredentialRepository.findByApiKey).toHaveBeenCalledWith({ apiKey });
   });
 
   it('should throw error id connection returns undefined', async () => {
-	connection.findByApiKey.mockResolvedValue(undefined);
+    authCredentialRepository.findByApiKey.mockResolvedValue(undefined);
     const promise = sut.validate({ apiKey });
     await expect(promise).rejects.toThrow();
   });
