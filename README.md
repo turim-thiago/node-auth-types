@@ -1,4 +1,4 @@
-# Titulo
+# node-auth-types
 
 ## Projeto visa demonstrar 4 abrodagens para autenticação em APIs.
 
