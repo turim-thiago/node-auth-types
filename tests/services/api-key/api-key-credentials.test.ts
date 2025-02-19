@@ -49,4 +49,12 @@ describe('ApiKeyCredentials', () => {
     const isValid = await sut.validate({ apiKey });
     expect(isValid).toBeTruthy();
   });
+
+  it('should return false if apiKey is invalid', async () => {
+    const invalidCredential = new AuthCredential({ id, name, key, apiKey: 'any_invalid_apy_key', clientId, type });
+    authCredentialRepository.findByApiKey.mockResolvedValueOnce(invalidCredential);
+    const isValid = await sut.validate({ apiKey });
+     expect(isValid).toBeFalsy()
+  });
+
 });
