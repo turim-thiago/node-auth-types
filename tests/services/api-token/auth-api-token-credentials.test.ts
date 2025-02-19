@@ -40,4 +40,10 @@ describe('AuthApiTokenCredentials', () => {
     await sut.auth({ password, username });
     expect(connection.findUsernameAndPassword).toHaveBeenCalledWith({username, password});
   });
+
+  it('should throw error id connection returns undefined', async () => {
+    connection.findUsernameAndPassword.mockResolvedValueOnce(undefined);
+    const promise = sut.auth({ password, username });
+    await expect(promise).rejects.toThrow();
+  });
 });
