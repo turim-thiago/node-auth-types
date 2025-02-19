@@ -16,11 +16,11 @@ describe('ApiKeyCredentials', () => {
   let sut: ApiKeyCredentials;
 
   beforeAll(() => {
-	id =  1;
-	name = 'any_credential_name';
-	key = 'any_key';
-	clientId = 'any_client_id';
-	type = AuthCredentialType.API_KEY;
+    id = 1;
+    name = 'any_credential_name';
+    key = 'any_key';
+    clientId = 'any_client_id';
+    type = AuthCredentialType.API_KEY;
     apiKey = 'any_api_key';
     authCredentialRepository = mock<AuthCredentialRepository>();
     authCredentialRepository.findByApiKey.mockResolvedValue(
@@ -28,13 +28,15 @@ describe('ApiKeyCredentials', () => {
     );
   });
 
-  beforeEach(()=>{
+  beforeEach(() => {
     sut = new ApiKeyCredentials(authCredentialRepository);
-  })
+  });
 
   it('should call connection with correct values', async () => {
     await sut.validate({ apiKey });
-    expect(authCredentialRepository.findByApiKey).toHaveBeenCalledWith({ apiKey });
+    expect(authCredentialRepository.findByApiKey).toHaveBeenCalledWith({
+      apiKey,
+    });
   });
 
   it('should throw error id connection returns undefined', async () => {
@@ -43,6 +45,8 @@ describe('ApiKeyCredentials', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  
-
+  it('should return true if apiKey is valid', async () => {
+    const isValid = await sut.validate({ apiKey });
+    expect(isValid).toBeTruthy();
+  });
 });
