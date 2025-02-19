@@ -8,6 +8,7 @@ import { mock, MockProxy } from 'jest-mock-extended';
 jest.mock('jsonwebtoken');
 
 describe('AuthApiTokenCredentials', () => {
+	let token: string;
   let id: number;
   let username: string;
   let password: string;
@@ -18,6 +19,7 @@ describe('AuthApiTokenCredentials', () => {
   let sut: AuthApiTokenCredentials;
 
   beforeAll(() => {
+	token = 'any_signed_token';
     id = 112233;
     username = 'any_username';
     password = 'any_p455w0rd';
@@ -32,6 +34,7 @@ describe('AuthApiTokenCredentials', () => {
       })
     );
     fakeJwt = jwt as jest.Mocked<typeof jwt>;
+	fakeJwt.sign.mockReturnValue('any_signed_token' as any);
   });
 
   beforeEach(() => {
@@ -61,5 +64,10 @@ describe('AuthApiTokenCredentials', () => {
     expect(jwt.sign).toHaveBeenCalledWith({ username }, secretKey, {
       expiresIn: expirationInSeconds,
     });
+  });
+
+  it('should return token', async () => {
+    const token = await sut.auth({ password, username });
+    expect(token).toEqual(token);
   });
 });
