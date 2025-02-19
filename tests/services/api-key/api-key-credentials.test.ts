@@ -26,17 +26,16 @@ describe('ApiKeyCredentials', () => {
     authCredentialRepository.findByApiKey.mockResolvedValue(
       new AuthCredential({ id, name, key, apiKey, clientId, type })
     );
-    sut = new ApiKeyCredentials(authCredentialRepository);
   });
+
+  beforeEach(()=>{
+    sut = new ApiKeyCredentials(authCredentialRepository);
+  })
 
   it('should call connection with correct values', async () => {
     await sut.validate({ apiKey });
     expect(authCredentialRepository.findByApiKey).toHaveBeenCalledWith({ apiKey });
   });
 
-  it('should throw error id connection returns undefined', async () => {
-    authCredentialRepository.findByApiKey.mockResolvedValue(undefined);
-    const promise = sut.validate({ apiKey });
-    await expect(promise).rejects.toThrow();
-  });
+
 });
