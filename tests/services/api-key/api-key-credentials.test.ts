@@ -37,5 +37,12 @@ describe('ApiKeyCredentials', () => {
     expect(authCredentialRepository.findByApiKey).toHaveBeenCalledWith({ apiKey });
   });
 
+  it('should throw error id connection returns undefined', async () => {
+    authCredentialRepository.findByApiKey.mockResolvedValueOnce(undefined);
+    const promise = sut.validate({ apiKey });
+    await expect(promise).rejects.toThrow();
+  });
+
+  
 
 });
